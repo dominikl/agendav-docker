@@ -1,20 +1,12 @@
 # agendav-docker
 
-Docker image for [AgenDAV - CalDAV web client](https://github.com/agendav/agendav). AgenDAV requires a CalDAV server running alongside (Baïkal, DAViCal, etc.). The address of CalDAV server must be specified in `AGENDAV_CALDAV_SERVER` env, e.g. `AGENDAV_CALDAV_SERVER=https://baikal.server.com/cal.php` or `AGENDAV_CALDAV_SERVER=https://radicale.server.svc.com:5232/%u`
+Forked from [nagimov/agendav-docker](https://github.com/nagimov/agendav-docker) and updated to use the latest version of AgenDAV and Debian base image.
 
-**Note regarding use of Baïkal back-end**: `WebDAV authentication type` must be set to `Basic` during Baïkal initialization.
-
-Since this image only carries a front-end for CalDAV, there's no provision for persistency. Running agendav statelessly has no drawbacks since agendav itself is not customizable.
-
-Standard `php:apache` base image is used. The build is not optimized for size or compilation time.
-
-## Supported tags
-
-See [packages](https://ghcr.io/nagimov/agendav-docker)
+Docker image for [AgenDAV - CalDAV web client](https://github.com/agendav/agendav). AgenDAV requires a CalDAV server running alongside (Baïkal, DAViCal, Radicale, etc.). The address of CalDAV server must be specified in `AGENDAV_CALDAV_SERVER` env, e.g. `AGENDAV_CALDAV_SERVER=https://baikal.server.com/cal.php` or `AGENDAV_CALDAV_SERVER=https://radicale.server.svc.com:5232/%u`
 
 ## Environment Variables
 
-Note: **all environment variables are mandatory** and must be set via [`docker-compose.yml`](https://github.com/nagimov/agendav-docker/blob/master/docker-compose.yml) or via `-e` option of `docker run ...`
+Note: **all environment variables are mandatory** and must be set via [`docker-compose.yml`](https://github.com/nagimov/agendav-docker/blob/master/docker-compose.yml) or via `-e` option of `docker run ...`. Do not change `AGENDAV_LOG_DIR`, it has to be set to `/var/www/agendav/var/log/`.
 
 | Environment Variable        | Example                               |
 | --------------------------- | ------------------------------------- |
@@ -26,25 +18,12 @@ Note: **all environment variables are mandatory** and must be set via [`docker-c
 | [`AGENDAV_TIMEZONE`][phptz] | `America/Denver`, `Europe/Berlin`     |
 | `AGENDAV_WEEKSTART`         | `0` (Sunday) or `1` (Monday)          |
 | `AGENDAV_LANG`              | `en`                                  |
-| `AGENDAV_LOG_DIR`           | `/tmp/`                               |
+| `AGENDAV_LOG_DIR`           | `/var/www/agendav/var/log/`           |
 
 ## Deployment
 
-- use provided [`docker-compose.yml`](https://github.com/nagimov/agendav-docker/blob/master/docker-compose.yml) and deploy via `docker-compose up`
-- or deploy via `docker run`:
-```
-docker pull ghcr.io/nagimov/agendav-docker:latest
-docker run -d --name=agendav \
-    -p 80:8080 \
-    -e AGENDAV_SERVER_NAME=127.0.0.1 \
-    -e AGENDAV_TITLE="Welcome to Example Agendav Server" \
-    -e AGENDAV_FOOTER="Hosted by Example Company" \
-    -e AGENDAV_CALDAV_SERVER=https://baikal.example.com/cal.php \
-    -e AGENDAV_CALDAV_PUBLIC_URL=https://baikal.example.com \
-    -e AGENDAV_TIMEZONE=UTC \
-    -e AGENDAV_LANG=en \
-    -e AGENDAV_LOG_DIR=/tmp/ \
-    ghcr.io/nagimov/agendav-docker:latest
-```
+Image is available at https://hub.docker.com/repository/docker/dominikl123/agendav/general .
 
-[phptz]: https://www.php.net/manual/en/timezones.php
+Use the provided [`docker-compose.yml`](https://github.com/dominikl/agendav-docker/blob/master/docker-compose.yml) and deploy via `docker-compose up -d`
+
+AgenDAV will be available at http://localhost . Set up nginx proxy to expose it securely.
