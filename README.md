@@ -27,3 +27,10 @@ Image is available at https://hub.docker.com/repository/docker/dominikl123/agend
 Use the provided [`docker-compose.yml`](https://github.com/dominikl/agendav-docker/blob/master/docker-compose.yml) and deploy via `docker-compose up -d`
 
 AgenDAV will be available at http://localhost . Set up nginx proxy to expose it securely.
+
+## Build and push docker image
+```
+tag="3.3.1-2"
+docker build --pull --no-cache -t dominikl123/agendav:$tag -t dominikl123/agendav:latest .
+docker push dominikl123/agendav:$tag && docker push dominikl123/agendav:latest
+```
